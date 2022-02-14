@@ -4,7 +4,8 @@
 [![PyPI version](https://badge.fury.io/py/discord-webhook.svg)](https://badge.fury.io/py/discord-webhook)
 [![Downloads](https://pepy.tech/badge/discord-webhook)](https://pepy.tech/project/discord-webhook)
 
-execute discord webhooks
+execute discord webhooks in AWS Lambda (urllib3 instead of requests)
+Functionality will be very basic. Removing Files, Proxies.
 
 ## Install
 
