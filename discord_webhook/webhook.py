@@ -2,12 +2,11 @@ import logging
 import json
 import time
 import datetime
-import requests
+import urllib3
 from webhook_exceptions import *
 
 
 logger = logging.getLogger(__name__)
-
 
 class DiscordWebhook:
     """
@@ -132,15 +131,21 @@ class DiscordWebhook:
         self.files = {}
 
     def api_post_request(self, url):
+        http = urllib3.PoolManager()
         if bool(self.files) is False:
-            response = requests.post(url, json=self.json, proxies=self.proxies,
-                                     params={'wait': True},
-                                     timeout=self.timeout)
+            response = http.request('POST', url,
+                     headers = {'Content-Type': 'application/json', 'User-Agent': 'CardTap Cloud/1.2 cardtap-access-engine'},
+                     body=json.dumps(self.json),
+                     timeout=self.timeout
+                     )
         else:
             self.files["payload_json"] = (None, json.dumps(self.json))
-            response = requests.post(url, files=self.files,
-                                     proxies=self.proxies,
-                                     timeout=self.timeout)
+            response = http.request('POST', url,
+                     headers = {'Content-Type': 'application/json', 'User-Agent': 'CardTap Cloud/1.2 cardtap-access-engine'},
+                     body=json.dumps(self.json),
+                     fields={"filefield": self.files},
+                     timeout=self.timeout
+                     )
 
         return response
 
@@ -204,6 +209,8 @@ class DiscordWebhook:
         :param sent_webhook: webhook.execute() response
         :return: Another webhook response
         """
+        logger.error("Library does not currently support edit")
+        return False
         sent_webhook = sent_webhook if isinstance(sent_webhook, list) else [sent_webhook]
         webhook_len = len(sent_webhook)
         responses = []
@@ -240,6 +247,8 @@ class DiscordWebhook:
         :param sent_webhook: webhook.execute() response
         :return: Response
         """
+        logger.error("Library does not currently support delete")
+        return False
         sent_webhook = sent_webhook if isinstance(sent_webhook, list) else [sent_webhook]
         webhook_len = len(sent_webhook)
         responses = []
